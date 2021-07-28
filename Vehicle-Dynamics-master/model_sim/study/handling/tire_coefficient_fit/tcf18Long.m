@@ -1,7 +1,7 @@
 % Writes data to load into MFGuiTool
 % Examining lateral force data for 18" R25B (Rev5 Tires)
 round = 6; %round number
-run = 34; %first run number (of desired range)
+run = 35; %first run number (of desired range)
 runs = 39; %last run number
 
 % ERROR NOTES: i often repeatedly got error Reference to non-existent field
@@ -81,7 +81,7 @@ for run = run:runs
              text(0, max(coeff), "Max: " + max(coeff));
              text(0, min(coeff), "Min: " + min(coeff))
      end
-      path = 'C:\Users\griff\Documents\Vehicle-Dynamics-master\model_sim\tireGraphs';
+      path = 'C:\Users\griff\Documents\PER_GGV_GriffinTireEdition\Vehicle-Dynamics-master\model_sim\tireGraphs';
       saveas(run, fullfile(path, "round"+round+"run"+run),'png');
  end
 
