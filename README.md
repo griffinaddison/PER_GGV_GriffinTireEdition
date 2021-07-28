@@ -16,4 +16,5 @@ i.e. I want to generate graphs for round 6 runs 23 through 26 would be "round = 
 9. Click run to generate graphs into popup windows.
 
 Note: when opening or running startup.m or tcf.....m its possible that a window will come up saying its not found on path. Click add to path and proceed as normal and everything should work.
+
 Note 2: also might need to change saveas path in tcf.....m if you want to automatically save pngs of graphs.
