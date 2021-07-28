@@ -1,0 +1,38 @@
+car = Rev6Full();
+enduranceTrack = readTrack('lincoln_endurance_2019');
+autocrossTrack = readTrack('lincoln_autocross_2019');
+track = autocrossTrack;
+car.params.latAccelFudge = car.params.latAccelFudge * 0.8 * 0.9;
+car.init('weightTransfer', 'numeric', 'useWheelVelocity', false);
+% enduranceGGV = createGGV(car, 'display', true);
+[xs, ys, dists, ~, ~] = createSectors(track.distances, track.radii, 1);
+[simOut, longVel, longAccel] = lapSim(enduranceGGV, track, 'startVel', 1.001, 'loop', true, 'plotProfile', false, 'accelZone', 0.3);
+[simOutFull, longVelFull, longAccelFull] = lapSim(enduranceGGV, track, 'startVel', 1.001, 'loop', true, 'plotProfile', false, 'accelZone', 1.0);
+
+figure;
+scatter3(xs, ys, longVelFull, [], longVelFull);
+hold on;
+plot3(xs, ys, longVel, 'Color', 'b');
+plot3(xs, ys, zeros(size(xs)));
+hold off;
+title('Long. Velocity Smoothed Lift & Coast w/ Aero');
+xlabel('X Distance [m]');
+ylabel('Y Distance [m]');
+zlabel('Velocity [m/s]');
+legend('w/o Lift & Coast', 'Lift & Coast', 'Track');
+caxis([0, 30]);
+colorbar;
+
+figure;
+scatter3(xs, ys, longAccelFull, [], longAccelFull);
+hold on;
+plot3(xs, ys, longAccel, 'Color', 'b');
+plot3(xs, ys, zeros(size(xs)));
+hold off;
+title('Long. Accel Smoothed Lift & Coast w/ Aero');
+xlabel('X Distance [m]');
+ylabel('Y Distance [m]');
+zlabel('Acceleration [m/s^2]');
+legend('w/o Lift & Coast', 'Lift & Coast', 'Track');
+caxis([-15, 15]);
+colorbar;

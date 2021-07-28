@@ -1,0 +1,3 @@
+{
+    "columns": ["t", "soc", "remainingCapacity", "powerDelivered", "current", "voltage", "h", "hdot", "lat", "long", "longVel", "latVel", "longAccel", "latAccel"]
+}

@@ -1,0 +1,5 @@
+long spikes in slalom
+weird fl fr wheel angles slalom
+* LATER motor power spikes
+accel time 3.35
+motor models

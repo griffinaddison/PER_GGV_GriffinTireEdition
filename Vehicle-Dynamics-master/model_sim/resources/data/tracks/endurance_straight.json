@@ -1,0 +1,6 @@
+{
+    "distances": [50, 33, 31],
+    "radii":    [99999, 10, -11],
+    "numslaloms":  2,
+    "numlaps": 16
+}

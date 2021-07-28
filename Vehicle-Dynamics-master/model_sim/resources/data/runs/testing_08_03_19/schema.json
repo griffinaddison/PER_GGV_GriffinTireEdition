@@ -1,0 +1,3 @@
+{
+    "columns": ["t", "remainingCapacity", "current", "powerDelivered", "soc", "voltage", "tireTempRr", "accel", "brake", "steer", "pitchdot", "rolldot", "hdot", "longAccel", "latAccel", "zAccel", "pitch", "roll", "h", "lat", "long", "longVel", "latVel", "zVel"]
+}

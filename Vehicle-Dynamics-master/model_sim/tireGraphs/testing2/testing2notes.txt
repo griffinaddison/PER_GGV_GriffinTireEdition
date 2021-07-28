@@ -1,0 +1,69 @@
+top 2 long runs by round:
+1: 16 18
+2: 35 37
+3: 48 27
+4: 69 73 149   (2 2, 1.8 2, 1.8 1.8)
+5: 54 57
+6: 38 45 58 55
+7: 42 39
+8: 48 49
+
+all rounds tested with exact same code.
+
+
+top long tires by name
+1: hoosier road racing 43131
+hoosier road racing 43157
+2: hoosier r25a
+avon fito acbo
+3: michelin radial X
+Goodyear eagle racing special d2692
+4: dunlop sp sport
+dunlop sp sport
+dunlop sp sport
+5:goodyear d2704
+6:hoosier R25B 43105
+Hoosier LCO 41100
+hoosier R25B 43163
+hoosier R25B 43163
+7:Cooper avon 14140S
+8:continental 43329
+
+
+
+
+top 2 lat runs by round:
+1: 
+	10 goodyear eagle racing special d1385
+	6 goodyear eagle racing special d1385
+2: 
+	26 hoosier r25a 43129 
+	22 goodyear eagle racing special 4376 d1383
+3: 
+	55 goodyear eagle racing special d2692
+	54 goodyear eagle racing special d2692
+4: 
+	61 hoosier r25b-c2500
+	8 dunlop sp sport
+5: 
+	11 goodyear d2704 
+	14 hoosier R25B 205/7.0-13
+6: 
+	21 hoosier R25B 43105
+	18 continental ?? (205/510R13)
+	24 hoosier R25B 43105
+	15 continental ?? (205/510R13)
+	9 hoosier 43163
+	(1.8 1.8, 1.8 1.8, rest 1.7ish)
+7: 
+	8 cooper avon 14140S
+	12 cooper avon 14140S
+8: 
+	37 continental 43329
+	36 continental 43329
+
+Overall top 4
+- dunlop sp sport (best longitudinal)
+- hoosier r25b 43105 (best all around)  18OD, 7.5W, 10lbs
+- continental 43329 (new, potentially great all around)
+- cooper avon 14140S (great all around, but only tested against self)

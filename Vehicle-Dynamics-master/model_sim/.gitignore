@@ -1,0 +1,7 @@
+*.mat
+*.png
+*.jpg
+*.fig
+*.csv
+
+!Hoosier16-18-SL-CombLong-v3.mat

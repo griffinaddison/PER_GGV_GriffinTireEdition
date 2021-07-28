@@ -1,0 +1,384 @@
+Let's talk about this here
+
+Samuel Pfrommer [5:04 PM]
+Samuel Pfrommer [5:00 PM]
+What kind of energy densities are we considering for our batteries
+
+
+Javier Peraza [5:01 PM]
+It’s more like
+Find a discharge curve that wins us the most points
+Find a battery that matches that curve with the lowest weight
+ED then comes last
+
+Samuel Pfrommer [5:03 PM]
+I can't optimize something like a curve
+My understanding was we're trying to figure out how much energy we need to finish endurance
+^ and then do a mass analysis to see how much we gain from different cell energy densities
+
+Javier Peraza [5:06 PM]
+We want enough energy to finish endurance with 1st place number of points. need to take in account res loses and drivetrain loses. If we simply find an energy value, it's not exactly correct, because cells have discharge curves, ie not constant
+
+Samuel Pfrommer [5:06 PM]
+what are res loses
+
+Suraj Chandran [5:06 PM]
+yes but isn't energy is independent of the discharge curve?
+
+Ben Wang [5:07 PM]
+no, the faster you discharge a battery the less energy you can extract
+
+Suraj Chandran [5:07 PM]
+resistive losses mean that the usable energy is lower
+yeah, so the shape of the discharge curve is affected based on discharge rate
+but ultimately can we really optimize for that?
+is there a good way to model that effect of current purely from principles of battery operation?
+
+Ben Wang [5:09 PM]
+there are 2 confusing uses of "discharge curve", one is a graph of discharge rate over time of say an endurance lap, the other is how voltage changes as you extract more energy
+
+Suraj Chandran [5:09 PM]
+im under the impression that we're talking about the latter
+
+Samuel Pfrommer [5:09 PM]
+^^
+
+Suraj Chandran [5:09 PM]
+are we not?
+
+Ben Wang [5:10 PM]
+so when javier said "find a discharge curve that wins us the most points", I think he means find out the energy use profile over a lap that optimizes for laptime
+
+Javier Peraza [5:10 PM]
+yes
+
+Samuel Pfrommer [5:10 PM]
+ohhh wait what
+
+Suraj Chandran [5:11 PM]
+ohhhhhhhhhhh lol
+
+Samuel Pfrommer [5:11 PM]
+How does that affect accumulator design?
+
+Ben Wang [5:12 PM]
+higher discharge rates means you lose more energy to internal resistance
+so going with less energy dense, but lower IR cells could optimize for delivered energy density
+
+Samuel Pfrommer [5:13 PM]
+So what any lapsim is going to tell you is that 90% of the time we're pulling 80kW since we're mostly power limited
+
+Suraj Chandran [5:13 PM]
+i mean if we're optimizing for laptime, that would simply be 80 kW power wherever possible
+
+Samuel Pfrommer [5:13 PM]
+Wasn't the IR of the cells negligible?
+like 1kW at full draw
+
+Suraj Chandran [5:13 PM]
+but that doesn't necessarily optimize for full race distance
+correct me if im wrong
+
+Samuel Pfrommer [5:13 PM]
+wdym full race distance
+
+Suraj Chandran [5:14 PM]
+over the entirety of endurance
+
+Ben Wang [5:14 PM]
+the IR of the cells is closer to 20kw at 266A (80kw@300v) if my math is correct
+
+Ben Wang [5:14 PM]
+and more as the voltage sags
+
+Suraj Chandran [5:14 PM]
+or i guess optimizing over both accel and endurance
+
+Samuel Pfrommer [5:15 PM]
+The lapsim optimizes for speed. It doesn't care if it's doing 1 lap or 16, it'll pull 80kW
+I can tell the lapsim to be more conservative (not use full power)
+but it's not optimizing for energy usage
+
+Suraj Chandran [5:16 PM]
+sorry i meant optimize between endurance and accel
+because using max power in endurance means high resistive losses
+which means greater weight necessary to get the required energy
+
+Ben Wang [5:17 PM]
+also as you use more energy, you get diminishing returns on autox, endurance etc
+
+Suraj Chandran [5:17 PM]
+which hurts us in accel since we could have gotten away with a lighter battery and more conservative energy usage in endurance
+
+Javier Peraza [5:17 PM]
+^^^^^
+
+Ben Wang [5:18 PM]
+wait @Sam Pfrommer so does lapsim assume you are either accelerating at 80kw or braking with max power?
+
+Suraj Chandran [5:18 PM]
+and does lapsim incorporate regen rn?
+
+Samuel Pfrommer [5:19 PM]
+@Ben Wang it'll accelerate max on straights but in cornering if it's limited by lateral traction it won't accelerate as much since it would fly off the track
+
+Ben Wang [5:19 PM]
+ok, makes sense
+
+Samuel Pfrommer [5:20 PM]
+@Suraj Chandran no but shouldn't be hard to do
+I just haven't heard any numbers for that yet
+
+Ben Wang [5:20 PM]
+is it possible to add an optimization step where it will take a timestep, set the power to 0, and run to see the difference in lap time, so we can create a curve of say energy use per lap vs time per lap?
+instead of simply throttling the max power
+
+Javier Peraza [5:21 PM]
+okay yeah IR loss is probably in the 10kW - 20 kW range. Idk where I was getting 1 kW from
+
+Suraj Chandran [5:21 PM]
+i mean, the motor model can be implemented with lower torques than peak
+
+Samuel Pfrommer [5:21 PM]
+@Ben Wang why is that better than throttling the max power? the latter is more realistic with what a driver would do (not accelerate as hard on straights)
+
+Ben Wang [5:22 PM]
+it has more optimal energy use, as you are already going faster by the time you are done accelerating than if you accelerate at a constant rate
+
+Suraj Chandran [5:22 PM]
+i think you could simply run the lapsim at lower motor torque
+oh that makes sense as well
+
+Samuel Pfrommer [5:23 PM]
+@Suraj Chandran that's pretty much what power throttling does
+
+Suraj Chandran [5:23 PM]
+perhaps set an rpm limit?
+
+Samuel Pfrommer [5:23 PM]
+@Ben Wang not sure if that's true tbh unless I'm misunderstanding you
+like what timestep do you want the driver to get off the power? middle of a straight?
+
+Suraj Chandran [5:24 PM]
+i think what ben is suggesting is accelerating at peak torque but then coasting part of the way
+
+Ben Wang [5:24 PM]
+yeah
+basically cutting acceleration short
+
+Samuel Pfrommer [5:25 PM]
+Intuitively it seems that longer softer acceleration should be more energy efficient that short hard
+
+Suraj Chandran [5:25 PM]
+we can try both
+
+Samuel Pfrommer [5:25 PM]
+most losses scale quadratically?
+and you expose yourself to drag losses
+
+Ben Wang [5:26 PM]
+from a "frictionless plane" physics perspective, it makes sense as you get up to speed faster and spend more time at a higher speed
+thus cover the distance faster
+but losses and aero does complicate things
+
+Suraj Chandran [5:27 PM]
+car applying wheel torque on a frictionless plane?
+
+Samuel Pfrommer [5:27 PM]
+I think this is a bit of a digression
+
+Suraj Chandran [5:27 PM]
+"assume a spherical cow"
+
+Samuel Pfrommer [5:28 PM]
+So basically there is a tradeoff between internal resistance and energy density
+Ideally I could just take a few candidate cells and tell you which one is the best
+
+Javier Peraza [5:29 PM]
+Can you do it with all candidate cells lol
+
+Samuel Pfrommer [5:29 PM]
+I'm not sure how it would be done otherwise, if i did a parameter sweep it would just say low IR and high density is best
+
+Ben Wang [5:29 PM]
+so resistive losses are before the 80kw limit
+
+Ben Wang [5:30 PM]
+so we can just find the lightest cells that hit the ideal (i.e. no accumulator energy loss) discharge profile
+
+Samuel Pfrommer [5:31 PM]
+idk what you mean with hit the ideal discharge profile
+my understanding is that any cell has to be able to discharge the amount of power we need, question is just iwth how much IR
+
+Ben Wang [5:32 PM]
+like assuming an ideal accumulator that can always hit 80kw (edited) 
+what kind of currents are the cells exposed to over an endurance lap
+so we can find the resistive losses in the pack to size the pack properly
+as the pack will be sized to energy delivered to powertrain over endurance + resistive losses
+
+Samuel Pfrommer [5:35 PM]
+ok. but that doesn't take into account the mass tradeoff (edited) 
+
+Suraj Chandran [5:36 PM]
+I mean, that's literally just minimize ir, maximize energy density
+
+Samuel Pfrommer [5:36 PM]
+uh yeah but that's not an obvious tradeoff
+
+Suraj Chandran [5:37 PM]
+Yeah what I'm saying is what you're saying Sam, doing only 80kw doesn't account for optimizing accel and endurance together
+
+Ben Wang [5:37 PM]
+so if we are able to create a 2d map of of energy and mass/points, we should be able to figure it out
+run it with say 10 different energys each with 10 different masses and we can interpolate
+
+Suraj Chandran [5:38 PM]
+In endurance even if the accumulator can hit 80 that doesn't mean we always want to
+I see
+
+Samuel Pfrommer [5:40 PM]
+Why don't we just run it with 10 different IR values and 10 different masses
+
+Suraj Chandran [5:40 PM]
+We can create a map for a bunch of different cells
+What about a 3d map
+
+Ben Wang [5:41 PM]
+we also want to know what size to make the accumulator (i.e. energy)
+IR is "captured" in the mass of the cells
+
+Ben Wang [5:41 PM]
+as cells with higher ir = more resistive losses = higher energy required = more mass
+
+Samuel Pfrommer [5:44 PM]
+Here's my idea for a sim:
+sweep over IRs
+For each IR, run a single endurance sim to determine energy usage, use this to determine energy requirement
+sweep over energy densities
+use aforementioned energy requirement to determine mass of accumulator
+run a complete points analysis with that IR and mass
+In the end you'll have a graph with IR and energy density on XY plane, points on Z axis
+where you can compare your cells
+
+Suraj Chandran [5:45 PM]
+I think the sim should use actual cell data
+
+Ben Wang [5:46 PM]
+the function should be reasonably well behaved over the range of parameters we are sweeping, so I think just a general map should be fine
+
+Suraj Chandran [5:47 PM]
+Yes but the mass required also depends on discharge rate
+
+Ben Wang [5:48 PM]
+? the IR of the cells capture the different discharge rates
+
+Suraj Chandran [5:48 PM]
+Oh my bad
+You mean resistive dissipation
+I thought you meant resistance in ohms
+Okay yeah makes sense now
+
+Ben Wang [5:50 PM]
+@Sam Pfrommer how will you run the first endurance sim without weight of the accumulator?
+
+Javier Peraza [5:50 PM]
+assume 100
+
+Samuel Pfrommer [5:51 PM]
+^^ yeah i would take some nominal weight, energy usage should be much more dependent on IR than mass
+
+Ben Wang [5:53 PM]
+hrm, that doesn't optimize for the size of the accumulator though
+as you are assuming a single endurance sim makes the best mass/energy tradeoff
+
+Suraj Chandran [5:53 PM]
+Can you run a solver?
+
+Samuel Pfrommer [5:54 PM]
+@Ben Wang the mass of the accumulator is still considered in energy density
+we just find a rough energy capacity we are trying to hit. The consider a bunch of energy densities and that gives us the mass
+
+Suraj Chandran [5:55 PM]
+Where it assumes an accumulator mass and then alters its guess over iterations to get a consistent result?
+
+Ben Wang [5:55 PM]
+I mean you dont consider if a lighter accumulator that has less energy lets you run faster
+
+Suraj Chandran [5:55 PM]
+Might be overkill tho
+
+Samuel Pfrommer [5:55 PM]
+@Suraj Chandran that's ideal but the inner loop is too slow for that to converge reasonably
+
+Suraj Chandran [5:55 PM]
+What I'm thinking
+Is you can do it for one point
+
+Ben Wang [5:56 PM]
+I think doing a accum mass / energy usage points sweep would reduce that circular dependency on accum mass and also allow you to directly optimize for that tradeoff
+
+Samuel Pfrommer [5:56 PM]
+@Ben Wang that's true. but i think it's a sacrifice we'd have to make, your proposal earlier has the same issue
+
+Suraj Chandran [5:56 PM]
+And then use that solved point to assume a continuous smooth function and construct a landscape
+
+Samuel Pfrommer [5:57 PM]
+@Ben Wang and you're propsing sweeping drive style to figure out energy usage?
+
+Ben Wang [6:00 PM]
+I'm proposing we have a knob we can tune, for energy use per lap, that we either change by capping power or by changing driving styles
+and we sweep energy use per lap vs accumulator mass to points
+that way we can directly optimize for both accumulator size and the IR/energy density tradeoff
+
+Samuel Pfrommer [6:03 PM]
+I think the artificial energy use variation will be a bigger error than the accumulator mass constant assumption
+
+Suraj Chandran [6:03 PM]
+So you are essentially suggesting construct a 4d landscape
+
+Suraj Chandran [6:03 PM]
+In which we can look at 3d slices
+
+Samuel Pfrommer [6:06 PM]
+also just to make sure: the 80kW limit does not include power dissapitated due to internal resistance correct?
+
+Javier Peraza [6:20 PM]
+@Sam Pfrommer do you still think this is all doable by next Monday?
+
+Samuel Pfrommer [6:21 PM]
+@Ben Wang sim is in matlab, i haven't tried optimizing it yet
+it won't get sub second tho in any language
+
+Ben Wang [6:22 PM]
+how many time steps is a lap?
+
+Samuel Pfrommer [6:22 PM]
+@javier It might need another week, this is pretty involved
+that's variable, it's discretized by distance, like 0.1m
+i'm rewriting our old ggv lapsim rn tho
+so this is all from our old one
+which was a lot slower than what i'll have
+
+Suraj Chandran [6:26 PM]
+So, are we doing mass vs energy per lap vs points?
+
+Samuel Pfrommer [6:27 PM]
+i think i'll do both
+
+Suraj Chandran [6:28 PM]
+Can we do a 4d landscape of mass vs ir vs total energy per lap vs points?
+Then we can extract various 3d and 2d plots
+
+
+Ben Wang [6:28 PM]
+ir is captured in mass, theres no point in doing both
+
+Suraj Chandran [6:29 PM]
+If we look at total energy consumed, that will give us more info for pack sizing
+
+Ben Wang [6:29 PM]
+yes, but we can compute that without running time consuming sims
+
+Suraj Chandran [6:29 PM]
+I suppose so

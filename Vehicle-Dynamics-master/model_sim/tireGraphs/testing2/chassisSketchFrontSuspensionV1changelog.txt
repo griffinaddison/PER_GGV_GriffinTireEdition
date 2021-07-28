@@ -1,0 +1,7 @@
+narrowed 4 front hardpoints by about 3" total (out of 4" said available)
+changed "wheelbase" sketch trackwidth from 45" to outter most clearance 53.81" (approximate b11 door width/rev6 max width)
+scaled suspension hardpoint widths by 0.6717 to better match chassis hardpoint widths
+moved bottom front susp hardpoint back 1" (shrinking)
+moved bottom back susp hardpoint forward 1/2" (shrinking)
+
+todo: determine optimal vertical and longitudinal placement of hardpoints based upon CG

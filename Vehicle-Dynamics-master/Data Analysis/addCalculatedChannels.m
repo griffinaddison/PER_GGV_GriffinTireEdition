@@ -1,0 +1,23 @@
+function [IDs, messages] = addCalculatedChannels(messages, IDs)
+    [IDs, messages] = mathChannel(messages, IDs, 'minusAx', 8601, [8298], @divideBy4096);
+    [IDs, messages] = mathChannel(messages, IDs, 'ay', 8602, [8297], @divideBy4096);
+    [IDs, messages] = mathChannel(messages, IDs, 'ax', 8603, [8601], @invert);
+    [IDs, messages] = mathChannel(messages, IDs, 'frontCornerWeight', 8604, [8301], @frontLoadCellTransfer);
+    [IDs, messages] = mathChannel(messages, IDs, 'rearCornerWeight', 8605, [8302], @rearLoadCellTransfer);
+    [IDs, messages] = mathChannel(messages, IDs, 'totalDownforce', 8600, [8604, 8605], @sum);
+    [IDs, messages] = mathChannel(messages, IDs, 'slipRatio', 8606, [8283, 8284, 8285, 8286], @calcSlipRatio);
+    [IDs, messages] = mathChannel(messages, IDs, 'steerAngle', 8607, [8287], @correctSteerAngle);
+    [IDs, messages] = differentialChannel(messages, IDs, 'momentX', 8608, 8302);
+    [IDs, messages] = differentialChannel(messages, IDs, 'rawderivativeX', 8609, 8287);
+    [IDs, messages] = mathChannel(messages, IDs, 'derivativeX', 8610, [8609], @correctDerivativeX);
+    [IDs, messages] = differentialChannel(messages, IDs, 'accel', 8611, 8283);
+    [IDs, messages] = mathChannel(messages, IDs, 'mps speed', 8612, [8283], @mph2mps);
+    [IDs, messages] = addDistanceTraveled(IDs, messages, 8613); 
+    [IDs, messages] = hampelFilterChannel(messages, IDs, 8302, 8614, 'hampledgyro', 6);
+    [IDs, messages] = zeroPhaseFilter(messages, IDs, 8614, 8615, 'smoothedgyro', 10);
+    [IDs, messages] = mathChannel(messages, IDs, 'mean front speed', 8616, [8283, 8284], @mean);
+    [IDs, messages] = mathChannel(messages, IDs, 'mean f speed, mps', 8617, [8616], @mph2mps);
+    [IDs, messages] = mathChannel(messages, IDs, 'radius', 8619, [8616, 8615], @dividePair);
+    [IDs, messages] = hampelFilterChannel(messages, IDs, 8602, 8620, 'hampled lat', 6);
+    [IDs, messages] = hampelFilterChannel(messages, IDs, 8603, 8621, 'hampled long', 6);
+end
