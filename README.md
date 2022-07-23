@@ -18,3 +18,7 @@ i.e. I want to generate graphs for round 6 runs 23 through 26 would be "round = 
 Note: when opening or running startup.m or tcf.....m its possible that a window will come up saying its not found on path. Click add to path and proceed as normal and everything should work.
 
 Note 2: also might need to change saveas path in tcf.....m if you want to automatically save pngs of graphs.
+
+Note 3: we use "run" not "raw" data from FSAETTC.com, in ASCII_SI format.
+
+Note 4: if you make a new folder for new round of data, like "round9", make sure it contains a "cornering" and a "drive_brake" folder, each of which needs a "schema.json" file which you can copy from an older preexisting cornering/drive_brake folder. Make sure you open the schema.json file and change the "prefix" to the 4-digit code corresponding to your round of data. i.e. for round9 .dat data files, one data file is "B2356run13.dat", so change the "prefix" in the schema.json to "B2356run".
